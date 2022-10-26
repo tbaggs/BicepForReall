@@ -1,0 +1,15 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "location": {
+            "value": "eastUS"
+        },
+        "prefix": {
+            "value": "bicep-dev"
+        },
+        "vNetId": {
+            "value": "/subscriptions/40d6b449-2c94-4caa-b205-7fe169d907d5/resourceGroups/BicepForReal/providers/Microsoft.Network/virtualNetworks/bicep-dev-vnet"
+        }
+    }
+}
