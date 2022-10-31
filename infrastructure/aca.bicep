@@ -1,24 +1,21 @@
 param location string
 param prefix string
-param vNetId string
+param vNetName string
 
 resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2020-10-01' = {
   name: '${prefix}-la-workspace'
   location: location
   properties: {
     sku: {
-      name: 'Free'
+       name: 'PerGB2018'
     }
   }
 }
 
-resource env 'Microsoft.Web/kubeEnvironments@2021-03-01' = {
+resource env 'Microsoft.App/managedEnvironments@2022-03-01' = {
   name: '${prefix}-container-env'
   location: location
-  kind: 'containerEnvironment'
   properties: {
-    environmentType: 'managed'
-    internalLoadBalancerEnabled: false
     appLogsConfiguration: {
       destination: 'log-analytics'
       logAnalyticsConfiguration: {
@@ -26,9 +23,9 @@ resource env 'Microsoft.Web/kubeEnvironments@2021-03-01' = {
         sharedKey: logAnalyticsWorkspace.listKeys().primarySharedKey
       }
     }
-    containerAppsConfiguration: {
-      appSubnetResourceId: '${vNetId}/subnets/acaAppSubnet'
-      controlPlaneSubnetResourceId: '${vNetId}/subnets/acaControlPlaneSubnet'
+    vnetConfiguration:{
+      runtimeSubnetId: resourceId('Microsoft.Network/virtualNetworks/subnets', vNetName,'acaAppSubnet')
+      infrastructureSubnetId: resourceId('Microsoft.Network/virtualNetworks/subnets', vNetName,'acaControlPlaneSubnet')
     }
   }
 }
